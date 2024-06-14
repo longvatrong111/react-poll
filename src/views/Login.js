@@ -1,28 +1,55 @@
-import { TextField, Button, FormGroup } from '@mui/material';
+import React, { useState } from 'react';
+import axios from 'axios';
 
-import logo from '../logo.svg';
-import './App.css';
+import './Login.css'; // Optionally include CSS for styling
 
-export default function Login() {
+function Login() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post('/api/login', {
+                email,
+                password,
+            });
+            console.log('Login successful:', response.data);
+            // handle successful login (e.g., redirect to another page, store token, etc.)
+        } catch (error) {
+            console.error('Login failed:', error);
+            // handle login failure (e.g., display error message)
+        }
+    };
+
     return (
-        <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                <a
-                    className="App-link"
-                    href="https://reactjs.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Learn React
-                </a>
-            </header>
-            <FormGroup>
-                <TextField variant='standard' label='Username'>Username </TextField>
-                <TextField variant='standard' label='Password' type='password'>Password</TextField>
-                <Button type="submit">Login</Button>
-                <Button type="submit">Register</Button>
-            </FormGroup>
+        <div className="login-container">
+            <form className="login-form" onSubmit={handleSubmit}>
+                <h2>Login</h2>
+                <div className="form-group">
+                    <label htmlFor="email">Email:</label>
+                    <input
+                        type="email"
+                        id="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="password">Password:</label>
+                    <input
+                        type="password"
+                        id="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                </div>
+                <button type="submit">Login</button>
+            </form>
         </div>
     );
 }
+
+export default Login;
